@@ -1,1 +1,1 @@
-Contains Exercises
+Collaborators: Sheyla L., Dakota M.
