@@ -29,17 +29,17 @@ def Exercise2A(image_path,value):
 test1Exercise2A=Exercise2A('src/cam_74.pgm',75)
 
 ## Save Image
-cv2.imwrite("src/test1Exercise2A.pgm", test1Exercise2A);
+cv2.imwrite("output/test1Exercise2A.pgm", test1Exercise2A)
 
 ## Test Case Number 2
 test2Exercise2A=Exercise2A('src/cam_74.pgm',10)
 
 ## Save Image
-cv2.imwrite("src/test2Exercise2A.pgm", test2Exercise2A);
+cv2.imwrite("output/test2Exercise2A.pgm", test2Exercise2A)
 
 ## Test Case Number 3
 test3Exercise2A=Exercise2A('src/cam_74.pgm',199)
 
 ## Save Image
-cv2.imwrite("src/test3Exercise2A.pgm", test3Exercise2A);
+cv2.imwrite("output/test3Exercise2A.pgm", test3Exercise2A)
 

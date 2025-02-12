@@ -42,11 +42,11 @@ def Exercise2C(image1_path,image2_path,method):
 ## Test on  Image 1 and Image 2 (Inf)
 test1Exercise2C=Exercise2C('src/'+'image1.pgm','src/'+'image2.pgm',method='inf')
 
-cv2.imwrite("src/inf.pgm", test1Exercise2C);
+cv2.imwrite("output/inf.pgm", test1Exercise2C);
 
 
 
 ## Test on  Image 1 and Image 2 (Sup)
 test2Exercise2C=Exercise2C('src/'+'image1.pgm','src/'+'image2.pgm',method='sup')
 
-cv2.imwrite("src/sup.pgm", test2Exercise2C);
+cv2.imwrite("output/sup.pgm", test2Exercise2C);
