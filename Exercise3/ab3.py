@@ -6,43 +6,54 @@ import numpy as np
 
 def custom_erosion(img, kernel_size):
     """
-    Morphological erosion in grayscale.
-    For each pixel, we take the minimum value within the local neighborhood
-    defined by kernel_size x kernel_size.
+    Morphological erosion in grayscale
     """
-    # 'pad' is half the kernel size (integer division).
-    pad = kernel_size // 2
+    h, w = img.shape  
+    pad = kernel_size // 2 
+    out = np.zeros_like(img) 
 
-    # BORDER_REPLICATE copies the outermost pixels so we can safely get neighborhoods near edges.
-    img_padded = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+    # Iterate through every pixel in the image
+    for y in range(h):
+        for x in range(w):
+            # Define the neighborhood bounds considering the image limits
+            y_start = max(0, y - pad)
+            y_end = min(h, y + pad + 1)
+            x_start = max(0, x - pad)
+            x_end = min(w, x + pad + 1)
 
-    # Output image of the same size as the original.
-    out = np.zeros_like(img)
+            # Extract the valid neighborhood region
+            roi = img[y_start:y_end, x_start:x_end]
 
-    for y in range(img.shape[0]):
-        for x in range(img.shape[1]):
-            # Extract the region of interest from the padded image.
-            # This region is kernel_size x kernel_size around (x, y).
-            roi = img_padded[y : y + kernel_size, x : x + kernel_size]
-            # Erosion in grayscale: take the minimum value in the neighborhood.
+            # Assign the minimum value in the valid region
             out[y, x] = np.min(roi)
 
     return out
 
+
+import cv2
+import numpy as np
+
 def custom_dilation(img, kernel_size):
     """
     Morphological dilation in grayscale.
-    For each pixel, we take the maximum value within the local neighborhood
-    defined by kernel_size x kernel_size.
     """
-    pad = kernel_size // 2
-    img_padded = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+    h, w = img.shape 
+    pad = kernel_size // 2 
     out = np.zeros_like(img)
 
-    for y in range(img.shape[0]):
-        for x in range(img.shape[1]):
-            roi = img_padded[y : y + kernel_size, x : x + kernel_size]
-            # Dilation in grayscale: take the maximum value in the neighborhood.
+    # Iterate through every pixel in the image
+    for y in range(h):
+        for x in range(w):
+            # Define the valid neighborhood bounds (handling borders)
+            y_start = max(0, y - pad)  
+            y_end = min(h, y + pad + 1)  
+            x_start = max(0, x - pad) 
+            x_end = min(w, x + pad + 1)
+
+            # Extract the valid neighborhood region
+            roi = img[y_start:y_end, x_start:x_end]
+
+            # Assign the maximum value in the valid region
             out[y, x] = np.max(roi)
 
     return out

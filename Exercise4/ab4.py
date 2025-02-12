@@ -1,7 +1,6 @@
 import sys
 import cv2
-from Exercise3 import custom_erosion, custom_dilation
-
+from Exercise3.ab3 import custom_erosion, custom_dilation
 
 def custom_opening(img, kernel_size):
     return custom_erosion(custom_dilation(img, kernel_size), kernel_size)
@@ -11,7 +10,7 @@ def custom_closing(img, kernel_size):
 
 def main():
     if len(sys.argv) < 4:
-        print("Usage: 3 <kernel_size> <input_image> <output_image> <operation> (opening/closing)")
+        print("Usage: 4 <kernel_size> <input_image> <output_image> <operation> (opening/closing)")
         sys.exit(1)
 
     i = int(sys.argv[1])

@@ -2,7 +2,7 @@
 
 import cv2
 
-def Exercise2B(image1_path,image2_path,output_file_name):
+def compare_images(image1_path,image2_path,output_file_name):
     
     ## Ingest Images from file paths
     img1 = cv2.imread(image1_path, cv2.IMREAD_GRAYSCALE)
@@ -38,12 +38,14 @@ def Exercise2B(image1_path,image2_path,output_file_name):
             file.write(str(int(are_equal)))
             file.close()
 
+        return are_equal
+
 
 
 ## Test on the same Image
-test1Exercise2B=Exercise2B('src/cam_74.pgm','src/cam_74.pgm','exercise_02b_output_01.txt')
+#test1Exercise2B=compare_images('src/cam_74.pgm','src/cam_74.pgm','exercise_02b_output_01.txt')
 
 ## Test on Different Images
-test1Exercise2B=Exercise2B('src/cam_74_threshold100.pgm','src/cam_74.pgm','exercise_02b_output_02.txt')
+#test1Exercise2B=compare_images('src/cam_74_threshold100.pgm','src/cam_74.pgm','exercise_02b_output_02.txt')
 
 
