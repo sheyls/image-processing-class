@@ -4,88 +4,126 @@ import sys
 import cv2
 import numpy as np
 
+
 def custom_erosion(img, kernel_size):
     """
     Morphological erosion in grayscale.
     For each pixel, we take the minimum value within the local neighborhood
     defined by kernel_size x kernel_size.
     """
-    # 'pad' is half the kernel size (integer division).
-    pad = kernel_size // 2
+    
+    # Output image of the same size as the original (but will be modified later).
+    out = img.copy()
 
-    # BORDER_REPLICATE copies the outermost pixels so we can safely get neighborhoods near edges.
-    img_padded = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+    ## Establish dimensinos of image
+    nrows=img.shape[0]
+    ncols=img.shape[1]
 
-    # Output image of the same size as the original.
-    out = np.zeros_like(img)
+    minrow=0
+    maxrow=nrows
+    mincol=0
+    maxcol=ncols
 
-    for y in range(img.shape[0]):
-        for x in range(img.shape[1]):
-            # Extract the region of interest from the padded image.
+    
+    
+
+    for row in range(0,nrows):
+        ## Establish floors and ceilings so that pixels which do not exist are not called
+        min_legal_boundary_row=max(row-kernel_size,minrow)
+        max_legal_boundary_row=min(row+kernel_size,maxrow)
+
+        
+        for col in range(0,ncols):
+            ## Establish floors and ceilings so that pixels which do not exist are not called
+            min_legal_boundary_col=max(col-kernel_size,mincol)
+            max_legal_boundary_col=min(col+kernel_size,maxcol)
+
+                
+            # print('ROW RANGE: '+str(min_legal_boundary_row)+', ',str(max_legal_boundary_row)+'COL RANGE: '+str(min_legal_boundary_col)+', ',str(max_legal_boundary_col))
+
+
+    
+            # Extract the region of interest from the image.
             # This region is kernel_size x kernel_size around (x, y).
-            roi = img_padded[y : y + kernel_size, x : x + kernel_size]
+            roi = img[min_legal_boundary_row : max_legal_boundary_row+1, min_legal_boundary_col:max_legal_boundary_col+1]
             # Erosion in grayscale: take the minimum value in the neighborhood.
-            out[y, x] = np.min(roi)
+            out[row, col] = np.min(roi)
 
     return out
 
 def custom_dilation(img, kernel_size):
     """
-    Morphological dilation in grayscale.
-    For each pixel, we take the maximum value within the local neighborhood
+    Morphological erosion in grayscale.
+    For each pixel, we take the minimum value within the local neighborhood
     defined by kernel_size x kernel_size.
     """
-    pad = kernel_size // 2
-    img_padded = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
-    out = np.zeros_like(img)
 
-    for y in range(img.shape[0]):
-        for x in range(img.shape[1]):
-            roi = img_padded[y : y + kernel_size, x : x + kernel_size]
-            # Dilation in grayscale: take the maximum value in the neighborhood.
-            out[y, x] = np.max(roi)
 
-    return out
+    # Output image of the same size as the original (but will be modified later).
+    out = img.copy()
 
-def main():
-    if len(sys.argv) < 4:
-        print("Usage: 3 <kernel_size> <input_image> <output_image> <operation> (erosion/dilation)")
-        sys.exit(1)
+    ## Establish dimensinos of image
+    nrows=img.shape[0]
+    ncols=img.shape[1]
 
-    i = int(sys.argv[1])
-    input_image_path = sys.argv[2]
-    output_image_path = sys.argv[3]
-    operation = sys.argv[4]
+    minrow=0
+    maxrow=nrows
+    mincol=0
+    maxcol=ncols
 
-    # Load the image in grayscale
-    img = cv2.imread(input_image_path, cv2.IMREAD_GRAYSCALE)
-    if img is None:
-        print(f"Error: could not read image {input_image_path}")
-        sys.exit(1)
 
-    # Define the kernel size
-    kernel_size = 2 * i + 1
+    for row in range(0,nrows):
+        ## Establish floors and ceilings so that pixels which do not exist are not called
+        min_legal_boundary_row=max(row-kernel_size,minrow)
+        max_legal_boundary_row=min(row+kernel_size,maxrow)
 
-    if operation == "erosion":  
-        # Perform morphological opening
-        erosion = custom_erosion(img, kernel_size)
+        
+        for col in range(0,ncols):
+            ## Establish floors and ceilings so that pixels which do not exist are not called
+            min_legal_boundary_col=max(col-kernel_size,mincol)
+            max_legal_boundary_col=min(col+kernel_size,maxcol)
+            
+            # print('ROW RANGE: '+str(min_legal_boundary_row)+', ',str(max_legal_boundary_row)+'COL RANGE: '+str(min_legal_boundary_col)+', ',str(max_legal_boundary_col))
 
-        # Save the resulting image
-        cv2.imwrite(output_image_path, erosion)
-        print(f"Opening done with a {kernel_size}x{kernel_size} kernel.")
-        print(f"Output image saved to: {output_image_path}")
-    elif operation == "dilation":
-        # Perform morphological closing
-        dilation = custom_dilation(img, kernel_size)
+    
+            # Extract the region of interest from the image.
+            # This region is kernel_size x kernel_size around (x, y).
+            roi = img[min_legal_boundary_row : max_legal_boundary_row+1, min_legal_boundary_col:max_legal_boundary_col+1]
+            # Erosion in grayscale: take the minimum value in the neighborhood.
+            out[row, col] = np.max(roi)
 
-        # Save the resulting image
-        cv2.imwrite(output_image_path, dilation)
-        print(f"Closing done with a {kernel_size}x{kernel_size} kernel.")
-        print(f"Output image saved to: {output_image_path}")
-    else:
-        print("Invalid operation. Please choose 'erosion' or 'dilation'.")
-        sys.exit(1)
+    return out 
 
-if __name__ == "__main__":
-    main()
+
+def ClosingOpeningAlternatedFilter(image_path,i):
+
+    ## Read image
+    img=cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+    ## Apply the Dilation and then Erosion  (Closing)
+
+    img_pt_2=custom_dilation(img,i)
+    
+    img_pt_3=custom_erosion(img_pt_2,i)
+
+    ## Apply the Erosion and then Dilation (Opening)
+
+    img_pt_4=custom_erosion(img_pt_3,i)
+    
+    img_pt_5=custom_dilation(img_pt_4,i)
+
+    return img_pt_5
+
+## Test Case Number 1 - Erosion Size 1  
+test1Exercise6=ClosingOpeningAlternatedFilter('src/immed_gray_inv.pgm',1)
+
+## Save Image
+cv2.imwrite("output/test1Exercise6.pgm", test1Exercise6)
+
+
+## Test Case Number 1 - Erosion Size 3
+test2Exercise6=ClosingOpeningAlternatedFilter('src/immed_gray_inv.pgm',3)
+
+## Save Image
+cv2.imwrite("output/test2Exercise6.pgm", test2Exercise6)
 
