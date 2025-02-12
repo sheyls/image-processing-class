@@ -1,0 +1,1 @@
+The image is the same with 1, 2 and 3 sequential OpeningClosing Filters applied, and the idempotence holds.

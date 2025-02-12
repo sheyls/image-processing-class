@@ -95,36 +95,68 @@ def custom_dilation(img, kernel_size):
     return out 
 
 
-def ClosingOpeningAlternatedFilter(image_path,i):
+## I is number of repetitions
+def OpeningClosingAlternatedFilter(img,i):
 
-    ## Read image
-    img=cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
-    ## Apply the Dilation and then Erosion  (Closing)
-
-    img_pt_2=custom_dilation(img,i)
-    
-    img_pt_3=custom_erosion(img_pt_2,i)
 
     ## Apply the Erosion and then Dilation (Opening)
 
-    img_pt_4=custom_erosion(img_pt_3,i)
+    img_pt_2=custom_erosion(img,i)
     
-    img_pt_5=custom_dilation(img_pt_4,i)
+    img_pt_3=custom_dilation(img_pt_2,i)
+
+    ## Apply the Dilation and then Erosion  (Closing)
+
+    img_pt_4=custom_dilation(img_pt_3,i)
+    
+    img_pt_5=custom_erosion(img_pt_4,i)
+
 
     return img_pt_5
 
+
+## Create a function that checks idempotence for OpeningClosing using i=1
+def verifyOpeningClosingFilterIdempotence(image_path):
+    
+    ## Read image
+    img=cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+    ## Apply Opening Closing 1x
+    img_1=OpeningClosingAlternatedFilter(img,1)
+
+    ## Apply Opening Closing 2x
+    img_2=OpeningClosingAlternatedFilter(OpeningClosingAlternatedFilter(img,1),1)
+
+    ## Apply Opening Closing 3x
+    img_3=OpeningClosingAlternatedFilter(OpeningClosingAlternatedFilter(OpeningClosingAlternatedFilter(img,1),1),1)
+
+
+    ## Establish dimensinos of image
+    nrows=img_1.shape[0]
+    ncols=img_1.shape[1]
+
+    ## Assume equality until proven otherwise
+    are_equal=True
+    for row in range(0,nrows):
+        for col in range(0,ncols):
+            cur_pixel_img_1=img_1[row,col]
+            cur_pixel_img_2=img_2[row,col]
+            cur_pixel_img_3=img_3[row,col]
+            
+            if (cur_pixel_img_1==cur_pixel_img_2==cur_pixel_img_3)!=True:
+                are_equal=False
+    return are_equal
+
+
 ## Test Case Number 1 - Size 1  
-test1Exercise6=ClosingOpeningAlternatedFilter('src/immed_gray_inv.pgm',1)
+test1Exercise7b=verifyOpeningClosingFilterIdempotence('src/cam_74.pgm')
 
-## Save Image
-cv2.imwrite("output/test1Exercise6a.pgm", test1Exercise6)
+print(test1Exercise7b)
 
-
-
-## Test Case Number 2 -  Size 3
-test2Exercise6=ClosingOpeningAlternatedFilter('src/immed_gray_inv_20051123_clo2ope2.pgm.pgm',3)
-
-## Save Image
-cv2.imwrite("output/test2Exercise6a.pgm", test2Exercise6)
+with open('output/test1Exercise7b.txt','w') as file:
+    if test1Exercise7b==True:
+        file.write('The image is the same with 1, 2 and 3 sequential OpeningClosing Filters applied, and the idempotence holds.')
+    else:
+        file.write('The image is not the same with 1, 2 and 3 sequential OpeningClosing Filters applied, the idempotence does not hold.')
 
