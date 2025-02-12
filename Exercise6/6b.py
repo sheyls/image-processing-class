@@ -120,12 +120,12 @@ def OpeningClosingAlternatedFilter(image_path,i):
 test1Exercise6=OpeningClosingAlternatedFilter('src/immed_gray_inv.pgm',1)
 
 ## Save Image
-cv2.imwrite("output/test1Exercise6.pgm", test1Exercise6)
+cv2.imwrite("output/test1Exercise6b.pgm", test1Exercise6)
 
 
 ## Test Case Number 1 -  Size 3
 test2Exercise6=OpeningClosingAlternatedFilter('src/immed_gray_inv_20051123_clo2ope2.pgm',3)
 
 ## Save Image
-cv2.imwrite("output/test2Exercise6.pgm", test2Exercise6)
+cv2.imwrite("output/test2Exercise6b.pgm", test2Exercise6)
 
