@@ -12,7 +12,7 @@ def Exercise2B(image1_path,image2_path,output_file_name):
     ## Check n_pixels
     if img1.size!=img2.size:
         ## In case the images are not of equal file size, write automatically 0
-        with open('src/'+output_file_name,'w') as file:
+        with open('output/'+output_file_name,'w') as file:
             file.write('0')
             file.close()
     ## If pixel arguments are equal, continue with code
@@ -34,7 +34,7 @@ def Exercise2B(image1_path,image2_path,output_file_name):
                 if cur_pixel_img1!=cur_pixel_img2:
                     are_equal=False
         ## Finally, write to file the outcome
-        with open('src/'+output_file_name,'w') as file:
+        with open('output/'+output_file_name,'w') as file:
             file.write(str(int(are_equal)))
             file.close()
 
