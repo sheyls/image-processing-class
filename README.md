@@ -24,3 +24,7 @@ This repository uses custom implementations for the following morphological oper
 - Custom Closing (Exercise 4b):
 
 These custom functions are used in later exercises to evaluate idempotence and filter performance.
+
+Collaborators:
+- Sheyla: sheyls
+- Dakota: dmellish99
